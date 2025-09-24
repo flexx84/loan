@@ -8,16 +8,36 @@ import ImageUpload from './ImageUpload';
 const HeroSection = () => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [showStylePanel, setShowStylePanel] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  
+  // 오버레이 스타일 상태
+  const [overlaySettings, setOverlaySettings] = useState({
+    opacity: 0.8,
+    color1: '#3b82f6', // blue-500
+    color2: '#6366f1', // indigo-500
+    gradientDirection: 'to-br', // to-bottom-right
+  });
 
-  // 배경 이미지 로딩
+  // 배경 이미지 및 설정 로딩
   useEffect(() => {
     const savedBg = localStorage.getItem('hero-background');
+    const savedOverlay = localStorage.getItem('hero-overlay-settings');
+    
     if (savedBg) {
       setBackgroundImage(savedBg);
     }
     
-    // 관리자 모드 체크 (실제로는 더 안전한 인증 시스템 필요)
+    if (savedOverlay) {
+      try {
+        const parsed = JSON.parse(savedOverlay);
+        setOverlaySettings(prev => ({ ...prev, ...parsed }));
+      } catch (error) {
+        console.error('Failed to parse overlay settings:', error);
+      }
+    }
+    
+    // 관리자 모드 체크
     const adminMode = localStorage.getItem('admin-mode') === 'true';
     setIsAdmin(adminMode);
   }, []);
@@ -33,17 +53,34 @@ const HeroSection = () => {
     }
   };
 
+  // 오버레이 설정 업데이트
+  const updateOverlaySettings = (newSettings: Partial<typeof overlaySettings>) => {
+    const updated = { ...overlaySettings, ...newSettings };
+    setOverlaySettings(updated);
+    localStorage.setItem('hero-overlay-settings', JSON.stringify(updated));
+  };
+
   const toggleAdminMode = () => {
     const newAdminMode = !isAdmin;
     setIsAdmin(newAdminMode);
     localStorage.setItem('admin-mode', newAdminMode.toString());
   };
 
+  // hex to rgba 변환 함수
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
   // 배경 스타일 생성
   const getBackgroundStyle = () => {
     if (backgroundImage) {
+      const gradient = `linear-gradient(${overlaySettings.gradientDirection}, ${hexToRgba(overlaySettings.color1, overlaySettings.opacity)}, ${hexToRgba(overlaySettings.color2, overlaySettings.opacity)})`;
+      
       return {
-        backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.8), rgba(99, 102, 241, 0.8)), url(${backgroundImage})`,
+        backgroundImage: `${gradient}, url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -51,6 +88,30 @@ const HeroSection = () => {
     }
     return {};
   };
+
+  // 그라디언트 방향 옵션
+  const gradientDirections = [
+    { value: 'to-r', label: '→ 오른쪽' },
+    { value: 'to-l', label: '← 왼쪽' },
+    { value: 'to-b', label: '↓ 아래' },
+    { value: 'to-t', label: '↑ 위' },
+    { value: 'to-br', label: '↘ 오른쪽 아래' },
+    { value: 'to-bl', label: '↙ 왼쪽 아래' },
+    { value: 'to-tr', label: '↗ 오른쪽 위' },
+    { value: 'to-tl', label: '↖ 왼쪽 위' },
+  ];
+
+  // 색상 프리셋
+  const colorPresets = [
+    { name: '블루', color1: '#3b82f6', color2: '#6366f1' },
+    { name: '퍼플', color1: '#8b5cf6', color2: '#a855f7' },
+    { name: '그린', color1: '#10b981', color2: '#059669' },
+    { name: '레드', color1: '#ef4444', color2: '#dc2626' },
+    { name: '오렌지', color1: '#f97316', color2: '#ea580c' },
+    { name: '핑크', color1: '#ec4899', color2: '#db2777' },
+    { name: '다크', color1: '#1f2937', color2: '#111827' },
+    { name: '클래식', color1: '#000000', color2: '#374151' },
+  ];
 
   return (
     <section 
@@ -62,15 +123,24 @@ const HeroSection = () => {
       }`}
       style={getBackgroundStyle()}
     >
-      {/* 관리자 버튼 */}
+      {/* 관리자 버튼들 */}
       {isAdmin && (
-        <button
-          onClick={() => setShowImageUpload(!showImageUpload)}
-          className="fixed top-20 right-4 z-50 bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors"
-          title="배경 이미지 설정"
-        >
-          <Settings className="w-5 h-5" />
-        </button>
+        <div className="fixed top-20 right-4 z-50 flex flex-col gap-2">
+          <button
+            onClick={() => setShowImageUpload(!showImageUpload)}
+            className={`bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors ${showImageUpload ? 'bg-blue-600' : ''}`}
+            title="배경 이미지 설정"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setShowStylePanel(!showStylePanel)}
+            className={`bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors ${showStylePanel ? 'bg-purple-600' : ''}`}
+            title="색상 및 투명도 설정"
+          >
+            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+          </button>
+        </div>
       )}
 
       {/* 이미지 업로드 패널 */}
@@ -102,6 +172,164 @@ const HeroSection = () => {
                   배경 제거
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 스타일 설정 패널 */}
+      {showStylePanel && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
+            <h3 className="text-xl font-bold mb-4 text-gray-900">오버레이 스타일 설정</h3>
+            
+            {/* 투명도 설정 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                투명도: {Math.round(overlaySettings.opacity * 100)}%
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={overlaySettings.opacity}
+                onChange={(e) => updateOverlaySettings({ opacity: parseFloat(e.target.value) })}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>투명</span>
+                <span>불투명</span>
+              </div>
+            </div>
+
+            {/* 색상 프리셋 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">색상 프리셋</label>
+              <div className="grid grid-cols-4 gap-2">
+                {colorPresets.map((preset) => (
+                  <button
+                    key={preset.name}
+                    onClick={() => updateOverlaySettings({ 
+                      color1: preset.color1, 
+                      color2: preset.color2 
+                    })}
+                    className={`p-2 rounded-lg border-2 transition-all ${
+                      overlaySettings.color1 === preset.color1 && overlaySettings.color2 === preset.color2
+                        ? 'border-blue-500 ring-2 ring-blue-200'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    title={preset.name}
+                  >
+                    <div 
+                      className="w-full h-8 rounded"
+                      style={{
+                        background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`
+                      }}
+                    />
+                    <div className="text-xs mt-1 text-gray-600">{preset.name}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 커스텀 색상 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">커스텀 색상</label>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs text-gray-600 mb-2">시작 색상</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={overlaySettings.color1}
+                      onChange={(e) => updateOverlaySettings({ color1: e.target.value })}
+                      className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={overlaySettings.color1}
+                      onChange={(e) => updateOverlaySettings({ color1: e.target.value })}
+                      className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded"
+                      placeholder="#3b82f6"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-600 mb-2">끝 색상</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={overlaySettings.color2}
+                      onChange={(e) => updateOverlaySettings({ color2: e.target.value })}
+                      className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={overlaySettings.color2}
+                      onChange={(e) => updateOverlaySettings({ color2: e.target.value })}
+                      className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded"
+                      placeholder="#6366f1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 그라디언트 방향 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">그라디언트 방향</label>
+              <div className="grid grid-cols-4 gap-2">
+                {gradientDirections.map((direction) => (
+                  <button
+                    key={direction.value}
+                    onClick={() => updateOverlaySettings({ gradientDirection: direction.value })}
+                    className={`p-2 text-xs rounded-lg border transition-all ${
+                      overlaySettings.gradientDirection === direction.value
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    {direction.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 미리보기 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">미리보기</label>
+              <div 
+                className="w-full h-20 rounded-lg"
+                style={{
+                  background: `linear-gradient(${overlaySettings.gradientDirection}, ${hexToRgba(overlaySettings.color1, overlaySettings.opacity)}, ${hexToRgba(overlaySettings.color2, overlaySettings.opacity)})`
+                }}
+              />
+            </div>
+
+            {/* 버튼들 */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowStylePanel(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                닫기
+              </button>
+              <button
+                onClick={() => {
+                  const defaultSettings = {
+                    opacity: 0.8,
+                    color1: '#3b82f6',
+                    color2: '#6366f1',
+                    gradientDirection: 'to-br',
+                  };
+                  setOverlaySettings(defaultSettings);
+                  localStorage.setItem('hero-overlay-settings', JSON.stringify(defaultSettings));
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                기본값으로 리셋
+              </button>
             </div>
           </div>
         </div>

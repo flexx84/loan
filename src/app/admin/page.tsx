@@ -20,6 +20,14 @@ const AdminPage = () => {
   const [heroBackground, setHeroBackground] = useState('');
   const [carouselImages, setCarouselImages] = useState<any[]>([]);
   const [showPreview, setShowPreview] = useState(false);
+  
+  // 히어로 오버레이 설정
+  const [overlaySettings, setOverlaySettings] = useState({
+    opacity: 0.8,
+    color1: '#3b82f6',
+    color2: '#6366f1',
+    gradientDirection: 'to-br',
+  });
 
   // 인증 체크
   useEffect(() => {
@@ -34,6 +42,7 @@ const AdminPage = () => {
   const loadData = () => {
     const savedHeroBg = localStorage.getItem('hero-background');
     const savedCarousel = localStorage.getItem('carousel-images');
+    const savedOverlay = localStorage.getItem('hero-overlay-settings');
     
     if (savedHeroBg) setHeroBackground(savedHeroBg);
     if (savedCarousel) {
@@ -43,6 +52,28 @@ const AdminPage = () => {
         console.error('Failed to load carousel images:', error);
       }
     }
+    if (savedOverlay) {
+      try {
+        setOverlaySettings(JSON.parse(savedOverlay));
+      } catch (error) {
+        console.error('Failed to load overlay settings:', error);
+      }
+    }
+  };
+
+  // 오버레이 설정 업데이트
+  const updateOverlaySettings = (newSettings: Partial<typeof overlaySettings>) => {
+    const updated = { ...overlaySettings, ...newSettings };
+    setOverlaySettings(updated);
+    localStorage.setItem('hero-overlay-settings', JSON.stringify(updated));
+  };
+
+  // hex to rgba 변환
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
   // 로그인 처리
@@ -260,41 +291,116 @@ const AdminPage = () => {
           {/* 왼쪽 - 관리 패널 */}
           <div>
             {activeTab === 'hero' && (
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <ImageIcon className="w-5 h-5 mr-2" />
-                  히어로 섹션 배경 이미지
-                </h2>
-                
-                {heroBackground && (
-                  <div className="mb-6">
-                    <p className="text-sm text-gray-600 mb-2">현재 배경 이미지:</p>
-                    <div className="relative h-32 bg-gray-100 rounded-lg overflow-hidden">
-                      <ResponsiveImage
-                        src={heroBackground}
-                        alt="현재 히어로 배경"
-                        fill
-                        className="object-cover"
-                      />
+              <div className="space-y-6">
+                {/* 배경 이미지 설정 */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <ImageIcon className="w-5 h-5 mr-2" />
+                    히어로 섹션 배경 이미지
+                  </h2>
+                  
+                  {heroBackground && (
+                    <div className="mb-6">
+                      <p className="text-sm text-gray-600 mb-2">현재 배경 이미지:</p>
+                      <div className="relative h-32 bg-gray-100 rounded-lg overflow-hidden">
+                        <ResponsiveImage
+                          src={heroBackground}
+                          alt="현재 히어로 배경"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          setHeroBackground('');
+                          localStorage.removeItem('hero-background');
+                        }}
+                        className="mt-2 flex items-center text-sm text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        배경 제거
+                      </button>
                     </div>
-                    <button
-                      onClick={() => {
-                        setHeroBackground('');
-                        localStorage.removeItem('hero-background');
-                      }}
-                      className="mt-2 flex items-center text-sm text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="w-4 h-4 mr-1" />
-                      배경 제거
-                    </button>
+                  )}
+                  
+                  <ImageUpload
+                    category="hero"
+                    onUploadSuccess={handleHeroImageUpload}
+                    maxFiles={1}
+                  />
+                </div>
+
+                {/* 오버레이 스타일 설정 */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    오버레이 색상 및 투명도 설정
+                  </h2>
+                  
+                  {/* 투명도 슬라이더 */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      투명도: {Math.round(overlaySettings.opacity * 100)}%
+                    </label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={overlaySettings.opacity}
+                      onChange={(e) => updateOverlaySettings({ opacity: parseFloat(e.target.value) })}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
                   </div>
-                )}
-                
-                <ImageUpload
-                  category="hero"
-                  onUploadSuccess={handleHeroImageUpload}
-                  maxFiles={1}
-                />
+
+                  {/* 색상 설정 */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">시작 색상</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={overlaySettings.color1}
+                          onChange={(e) => updateOverlaySettings({ color1: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={overlaySettings.color1}
+                          onChange={(e) => updateOverlaySettings({ color1: e.target.value })}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">끝 색상</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={overlaySettings.color2}
+                          onChange={(e) => updateOverlaySettings({ color2: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={overlaySettings.color2}
+                          onChange={(e) => updateOverlaySettings({ color2: e.target.value })}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 미리보기 */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">미리보기</label>
+                    <div 
+                      className="w-full h-20 rounded-lg border"
+                      style={{
+                        background: `linear-gradient(${overlaySettings.gradientDirection}, ${hexToRgba(overlaySettings.color1, overlaySettings.opacity)}, ${hexToRgba(overlaySettings.color2, overlaySettings.opacity)})`
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             )}
 
@@ -397,13 +503,30 @@ const AdminPage = () => {
                     <div 
                       className="absolute inset-0 bg-cover bg-center"
                       style={{
-                        backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.8), rgba(99, 102, 241, 0.8)), url(${heroBackground})`
+                        backgroundImage: `linear-gradient(${overlaySettings.gradientDirection}, ${hexToRgba(overlaySettings.color1, overlaySettings.opacity)}, ${hexToRgba(overlaySettings.color2, overlaySettings.opacity)}), url(${heroBackground})`
                       }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center text-white">
                       <div className="text-center">
-                        <h4 className="text-2xl font-bold mb-2">최저금리 맞춤형 대출서비스</h4>
-                        <p className="text-lg">미리보기</p>
+                        <h4 className="text-2xl font-bold mb-2 drop-shadow-lg">최저금리 맞춤형 대출서비스</h4>
+                        <p className="text-lg opacity-90">실시간 미리보기</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {activeTab === 'hero' && !heroBackground && (
+                  <div className="relative h-64 rounded-lg overflow-hidden">
+                    <div 
+                      className="absolute inset-0"
+                      style={{
+                        background: `linear-gradient(${overlaySettings.gradientDirection}, ${hexToRgba(overlaySettings.color1, overlaySettings.opacity)}, ${hexToRgba(overlaySettings.color2, overlaySettings.opacity)})`
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center text-white">
+                      <div className="text-center">
+                        <h4 className="text-2xl font-bold mb-2 drop-shadow-lg">최저금리 맞춤형 대출서비스</h4>
+                        <p className="text-lg opacity-90">배경 이미지를 추가하면 더 멋진 효과를 볼 수 있습니다</p>
                       </div>
                     </div>
                   </div>

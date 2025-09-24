@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import ImageCarousel from './ImageCarousel';
 
 interface Testimonial {
   id: number;
@@ -225,6 +226,21 @@ const TestimonialSection = () => {
             <div className="text-lg font-semibold text-gray-600">IBK기업은행</div>
             <div className="text-lg font-semibold text-gray-600">NH농협은행</div>
           </div>
+        </div>
+
+        {/* 고객 사진 캐러셀 (선택사항) */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            고객 만족의 순간들
+          </h3>
+          <ImageCarousel
+            className="max-w-4xl mx-auto"
+            height="h-48 sm:h-64 lg:h-80"
+            autoPlay={true}
+            interval={4000}
+            showControls={true}
+            showIndicators={true}
+          />
         </div>
 
         {/* CTA */}

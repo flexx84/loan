@@ -1,9 +1,45 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
 const Footer = () => {
+  const [adminClickCount, setAdminClickCount] = useState(0);
+  const [isAdminMode, setIsAdminMode] = useState(false);
+
+  // localStorage에서 admin 모드 상태 확인
+  useEffect(() => {
+    const adminMode = localStorage.getItem("admin-mode") === "true";
+    setIsAdminMode(adminMode);
+  }, []);
+
+  // AOS 텍스트 클릭 처리
+  const handleAOSClick = () => {
+    const newCount = adminClickCount + 1;
+    setAdminClickCount(newCount);
+    
+    if (newCount >= 5) {
+      const newAdminMode = !isAdminMode;
+      setIsAdminMode(newAdminMode);
+      localStorage.setItem("admin-mode", newAdminMode.toString());
+      setAdminClickCount(0);
+      
+      // admin 모드 변경 이벤트 발송
+      window.dispatchEvent(new CustomEvent('adminModeChanged', { 
+        detail: { isAdmin: newAdminMode } 
+      }));
+      
+      alert(newAdminMode ? "🔧 관리자 모드가 활성화되었습니다!" : "🔒 관리자 모드가 비활성화되었습니다!");
+    }
+    
+    // 5초 후 카운트 리셋
+    setTimeout(() => {
+      if (adminClickCount === newCount) {
+        setAdminClickCount(0);
+      }
+    }, 5000);
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -91,6 +127,18 @@ const Footer = () => {
               <a href="#" className="hover:text-blue-400 transition-colors">개인정보처리방침</a>
               <a href="#" className="hover:text-blue-400 transition-colors">대부중개업 안내</a>
               <a href="#" className="hover:text-blue-400 transition-colors">신용정보활용체제</a>
+              <span 
+                className={`cursor-pointer transition-colors select-none ${
+                  adminClickCount > 0 ? 'text-blue-300' : 'text-gray-500'
+                }`}
+                onClick={handleAOSClick}
+                title={`${adminClickCount > 0 ? `${5 - adminClickCount}번 더 클릭` : '관리자 기능'}`}
+              >
+                AOS
+              </span>
+              {isAdminMode && (
+                <span className="text-green-400 text-xs">● 관리자</span>
+              )}
             </div>
           </div>
         </div>

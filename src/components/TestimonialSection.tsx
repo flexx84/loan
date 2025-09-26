@@ -180,7 +180,7 @@ const TestimonialSection = () => {
 
             <div className="text-center mb-8">
               <p className="text-xl leading-relaxed text-gray-800 mb-6 font-medium">
-                "{currentTestimonial.comment}"
+                &quot;{currentTestimonial.comment}&quot;
               </p>
               
               <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
@@ -229,20 +229,7 @@ const TestimonialSection = () => {
         </div>
 
         {/* 고객 사진 캐러셀 (선택사항) */}
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-            고객 만족의 순간들
-          </h3>
-          <ImageCarousel
-            className="max-w-4xl mx-auto"
-            height="h-48 sm:h-64 lg:h-80"
-            autoPlay={true}
-            interval={4000}
-            showControls={true}
-            showIndicators={true}
-          />
-        </div>
-
+       
         {/* CTA */}
         <div className="mt-16 text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">

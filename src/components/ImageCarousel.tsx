@@ -13,6 +13,13 @@ interface CarouselImage {
   description?: string;
 }
 
+interface UploadedFile {
+  size: string;
+  path: string;
+  width?: number;
+  height?: number;
+}
+
 interface ImageCarouselProps {
   images?: CarouselImage[];
   autoPlay?: boolean;
@@ -105,7 +112,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     setIsPlaying(!isPlaying);
   };
 
-  const handleImageUpload = (uploadedFiles: any[]) => {
+  const handleImageUpload = (uploadedFiles: UploadedFile[]) => {
     const newImages = uploadedFiles
       .filter(file => file.size === 'original')
       .map((file, index) => ({

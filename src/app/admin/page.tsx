@@ -13,12 +13,20 @@ interface UploadedFile {
   height?: number;
 }
 
+interface CarouselImage {
+  id: string;
+  src: string;
+  alt: string;
+  title?: string;
+  description?: string;
+}
+
 const AdminPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('hero');
   const [heroBackground, setHeroBackground] = useState('');
-  const [carouselImages, setCarouselImages] = useState<any[]>([]);
+  const [carouselImages, setCarouselImages] = useState<CarouselImage[]>([]);
   const [showPreview, setShowPreview] = useState(false);
   
   // 히어로 오버레이 설정
@@ -174,13 +182,13 @@ const AdminPage = () => {
         <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
           <div className="text-center mb-6">
             <Settings className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900">관리자 로그인</h1>
+            <h1 className="text-2xl font-bold text-black">관리자 로그인</h1>
             <p className="text-gray-600">SH파이낸셜 관리 페이지</p>
           </div>
           
           <form onSubmit={handleLogin}>
             <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-black mb-2">
                 패스워드
               </label>
               <input
@@ -216,7 +224,7 @@ const AdminPage = () => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-semibold text-gray-900 flex items-center">
+            <h1 className="text-xl font-semibold text-black flex items-center">
               <Settings className="w-6 h-6 mr-2 text-blue-600" />
               SH파이낸셜 관리자 페이지
             </h1>
@@ -224,7 +232,7 @@ const AdminPage = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowPreview(!showPreview)}
-                className="flex items-center px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className="flex items-center px-3 py-2 text-sm bg-gray-100 text-black rounded-lg hover:bg-gray-200 transition-colors"
               >
                 {showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
                 {showPreview ? '미리보기 숨김' : '미리보기'}
@@ -258,7 +266,7 @@ const AdminPage = () => {
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'hero'
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-black hover:text-black hover:border-gray-300'
               }`}
             >
               히어로 섹션
@@ -268,7 +276,7 @@ const AdminPage = () => {
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'carousel'
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-black hover:text-black hover:border-gray-300'
               }`}
             >
               이미지 캐러셀
@@ -278,7 +286,7 @@ const AdminPage = () => {
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'settings'
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-black hover:text-black hover:border-gray-300'
               }`}
             >
               설정
@@ -294,8 +302,8 @@ const AdminPage = () => {
               <div className="space-y-6">
                 {/* 배경 이미지 설정 */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    <ImageIcon className="w-5 h-5 mr-2" />
+                  <h2 className="text-lg font-semibold text-black mb-4 flex items-center">
+                    <ImageIcon className="w-5 h-5 mr-2 text-black" />
                     히어로 섹션 배경 이미지
                   </h2>
                   
@@ -332,13 +340,13 @@ const AdminPage = () => {
 
                 {/* 오버레이 스타일 설정 */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h2 className="text-lg font-semibold text-black mb-4">
                     오버레이 색상 및 투명도 설정
                   </h2>
                   
                   {/* 투명도 슬라이더 */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-black mb-2">
                       투명도: {Math.round(overlaySettings.opacity * 100)}%
                     </label>
                     <input
@@ -355,7 +363,7 @@ const AdminPage = () => {
                   {/* 색상 설정 */}
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">시작 색상</label>
+                      <label className="block text-sm font-medium text-black mb-2">시작 색상</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
@@ -372,7 +380,7 @@ const AdminPage = () => {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">끝 색상</label>
+                      <label className="block text-sm font-medium text-black mb-2">끝 색상</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
@@ -392,7 +400,7 @@ const AdminPage = () => {
 
                   {/* 미리보기 */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">미리보기</label>
+                    <label className="block text-sm font-medium text-black mb-2">미리보기</label>
                     <div 
                       className="w-full h-20 rounded-lg border"
                       style={{
@@ -406,7 +414,7 @@ const AdminPage = () => {
 
             {activeTab === 'carousel' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <h2 className="text-lg font-semibold text-black mb-4 flex items-center">
                   <ImageIcon className="w-5 h-5 mr-2" />
                   캐러셀 이미지 관리
                 </h2>
@@ -450,7 +458,7 @@ const AdminPage = () => {
 
             {activeTab === 'settings' && (
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-black mb-4">
                   시스템 설정
                 </h2>
                 
@@ -496,7 +504,7 @@ const AdminPage = () => {
           {showPreview && (
             <div>
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">실시간 미리보기</h3>
+                <h3 className="text-lg font-semibold text-black mb-4">실시간 미리보기</h3>
                 
                 {activeTab === 'hero' && heroBackground && (
                   <div className="relative h-64 rounded-lg overflow-hidden">

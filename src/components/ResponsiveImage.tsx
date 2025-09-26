@@ -15,6 +15,8 @@ interface ResponsiveImageProps {
   blurDataURL?: string;
   category?: string;
   fallbackSrc?: string;
+  onLoad?: () => void;
+  onError?: () => void;
 }
 
 interface ImageSources {
@@ -35,12 +37,15 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   placeholder = 'empty',
   blurDataURL,
   category = 'general',
-  fallbackSrc = '/images/placeholder.webp'
+  fallbackSrc = '/images/placeholder.svg',
+  onLoad: externalOnLoad,
+  onError: externalOnError
 }) => {
   const [imageSources, setImageSources] = useState<ImageSources | null>(null);
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   // 반응형 이미지 소스 생성
   const generateResponsiveSources = (baseSrc: string): ImageSources => {
@@ -94,12 +99,31 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   const handleLoad = () => {
     setIsLoading(false);
     setHasError(false);
+    setRetryCount(0);
+    if (externalOnLoad) {
+      externalOnLoad();
+    }
   };
 
   const handleError = () => {
+    console.error('Image failed to load:', currentSrc);
+    
+    if (retryCount < 2 && src && !src.includes(fallbackSrc)) {
+      // 재시도 로직
+      setTimeout(() => {
+        setRetryCount(prev => prev + 1);
+        // 원본 이미지 소스로 재시도
+        setCurrentSrc(src);
+      }, 1000);
+      return;
+    }
+    
     setIsLoading(false);
     setHasError(true);
     setCurrentSrc(fallbackSrc);
+    if (externalOnError) {
+      externalOnError();
+    }
   };
 
   // srcSet 생성 (WebP 지원)
@@ -113,19 +137,23 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     ].join(', ');
   };
 
+  // 개발 환경에서는 단순한 이미지 경로 사용
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const finalSrc = hasError ? fallbackSrc : (isDevelopment ? currentSrc : getResponsiveSource());
+
   const imageProps = {
-    src: getResponsiveSource(),
+    src: finalSrc,
     alt,
     className: `${className} ${isLoading ? 'animate-pulse bg-gray-200' : ''} ${hasError ? 'opacity-50' : ''}`,
     priority,
-    quality,
+    quality: isDevelopment ? 75 : quality,
     onLoad: handleLoad,
     onError: handleError,
-    ...(placeholder === 'blur' && blurDataURL && { 
+    ...(placeholder === 'blur' && blurDataURL && !hasError && { 
       placeholder: 'blur' as const, 
       blurDataURL 
     }),
-    ...(imageSources && {
+    ...(!isDevelopment && imageSources && !hasError && {
       srcSet: generateSrcSet(),
       sizes
     })

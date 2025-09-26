@@ -1,0 +1,462 @@
+================================================================================
+AOS 애니메이션 효과 적용 PRD (Product Requirements Document)
+================================================================================
+
+1. 개요
+================================================================================
+
+1.1 목적
+웹사이트에 AOS (Animate On Scroll) 라이브러리를 적용하여 스크롤 시 요소들이 부드럽게 나타나는 애니메이션 효과를 구현합니다.
+
+1.2 범위
+- AOS 라이브러리 설치 및 초기화
+- CSS 애니메이션 스타일 적용
+- HTML 요소에 AOS 속성 적용
+- 호버 효과 및 인터랙션 애니메이션 추가
+
+2. 기술 요구사항
+================================================================================
+
+2.1 필수 라이브러리
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+2.2 의존성
+- 최소 브라우저 지원: Chrome 60+, Firefox 60+, Safari 12+, Edge 79+
+- 모바일 브라우저 지원 필수
+
+3. 파일 구조
+================================================================================
+
+project/
+├── css/
+│   ├── global.css (AOS 통합 스타일)
+│   └── aos.css (CDN 또는 로컬)
+├── js/
+│   ├── aos.js (CDN 또는 로컬)
+│   └── custom-animations.js (커스텀 JS)
+├── img/
+│   └── (각종 이미지 파일들)
+└── index.html
+
+4. Global CSS 핵심 내용
+================================================================================
+
+4.1 기본 AOS 애니메이션
+[data-aos] {
+  opacity: 0;
+  transition-property: opacity, transform;
+}
+
+[data-aos].aos-animate {
+  opacity: 1;
+}
+
+4.2 주요 애니메이션 타입
+- fade-up: 아래에서 위로 페이드인
+- fade-down: 위에서 아래로 페이드인
+- fade-left: 왼쪽에서 오른쪽으로
+- fade-right: 오른쪽에서 왼쪽으로
+- zoom-in: 확대되며 나타남
+- zoom-out: 축소되며 나타남
+- slide-up/down/left/right: 슬라이드 효과
+- flip-up/down/left/right: 회전 효과
+
+4.3 호버 효과
+.btn-animated:hover {
+  background: #cb4825;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(234, 84, 2, 0.4);
+}
+
+.card-animated:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+5. JavaScript 초기화 코드
+================================================================================
+
+5.1 기본 초기화
+AOS.init({
+  offset: 120,
+  delay: 0,
+  duration: 400,
+  easing: 'ease',
+  once: false,
+  mirror: false,
+  anchorPlacement: 'top-bottom',
+});
+
+5.2 커스텀 기능
+- 카운터 애니메이션
+- 패러렉스 스크롤 효과
+- 원형 프로그레스 바
+- 텍스트 타이핑 애니메이션
+
+6. HTML 구현 예시
+================================================================================
+
+6.1 기본 적용
+<div data-aos="fade-up" data-aos-duration="600">
+  콘텐츠
+</div>
+
+6.2 지연시간 적용
+<h1 data-aos="fade-up" data-aos-delay="200">제목</h1>
+<p data-aos="fade-up" data-aos-delay="400">내용</p>
+<button data-aos="fade-up" data-aos-delay="600">버튼</button>
+
+6.3 복합 효과
+<div data-aos="zoom-in-up" data-aos-duration="800" data-aos-delay="300">
+  카드 콘텐츠
+</div>
+
+7. 애니메이션 속성 상세
+================================================================================
+
+7.1 data-aos 속성
+- fade: 기본 페이드
+- fade-up/down/left/right: 방향성 페이드
+- fade-up-right/left: 대각선 페이드
+- fade-down-right/left: 대각선 페이드
+- slide-up/down/left/right: 슬라이드
+- zoom-in/out: 확대/축소
+- zoom-in-up/down/left/right: 방향성 줌
+- flip-up/down/left/right: 회전
+
+7.2 추가 속성
+- data-aos-offset="200": 트리거 오프셋
+- data-aos-delay="300": 지연 시간(ms)
+- data-aos-duration="1000": 애니메이션 시간(ms)
+- data-aos-easing="ease-in-out": 이징 함수
+- data-aos-mirror="true": 스크롤 업 시에도 애니메이션
+- data-aos-once="true": 한 번만 실행
+- data-aos-anchor-placement="top-center": 앵커 위치
+
+8. 성능 최적화 가이드
+================================================================================
+
+8.1 성능 고려사항
+- 한 번에 너무 많은 AOS 요소 사용 금지 (페이지당 50개 이하 권장)
+- 복잡한 transform 애니메이션보다 opacity, translate 우선 사용
+- will-change 속성 남용 방지
+
+8.2 메모리 최적화
+[data-aos] {
+  will-change: opacity, transform;
+  transform: translateZ(0);
+}
+
+[data-aos].aos-animate {
+  will-change: auto;
+}
+
+8.3 배터리 절약 대응
+if ('getBattery' in navigator) {
+  navigator.getBattery().then(battery => {
+    if (battery.level < 0.2) {
+      AOS.init({ disable: true });
+    }
+  });
+}
+
+9. 브라우저 호환성
+================================================================================
+
+9.1 지원 브라우저
+브라우저    최소 버전    지원 상태
+Chrome     60+         완전 지원
+Firefox    60+         완전 지원
+Safari     12+         완전 지원
+Edge       79+         완전 지원
+IE         11          폴리필 필요
+
+9.2 필수 폴리필
+<script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver,requestAnimationFrame"></script>
+
+10. 접근성 고려사항
+================================================================================
+
+10.1 모션 감소 설정 대응
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+10.2 키보드 접근성
+- 중요한 콘텐츠는 AOS 없이도 접근 가능해야 함
+- 포커스 이동 시 애니메이션 고려
+
+11. 실제 구현 단계
+================================================================================
+
+11.1 1단계: 기본 설정
+1. AOS 라이브러리 CDN 링크 추가
+2. Global CSS 파일 생성 및 적용
+3. Custom JavaScript 파일 생성
+4. 기본 초기화 코드 작성
+
+11.2 2단계: 헤더/네비게이션 애니메이션
+<header data-aos="fade-down" data-aos-duration="600">
+  <div class="logo" data-aos="fade-right" data-aos-delay="200">
+    <!-- 로고 -->
+  </div>
+  <nav data-aos="fade-left" data-aos-delay="400">
+    <!-- 네비게이션 -->
+  </nav>
+</header>
+
+11.3 3단계: 메인 비주얼 영역
+<section class="hero">
+  <h1 data-aos="fade-up" data-aos-delay="600">메인 타이틀</h1>
+  <h2 data-aos="zoom-in" data-aos-delay="800">서브 타이틀</h2>
+  <div class="cta" data-aos="fade-up" data-aos-delay="1000">
+    <button>CTA 버튼</button>
+  </div>
+</section>
+
+11.4 4단계: 콘텐츠 섹션들
+<!-- 특징 섹션 -->
+<section class="features">
+  <div class="title" data-aos="fade-up">섹션 제목</div>
+  <div class="cards">
+    <div class="card" data-aos="zoom-in" data-aos-delay="200">카드1</div>
+    <div class="card" data-aos="zoom-in" data-aos-delay="400">카드2</div>
+    <div class="card" data-aos="zoom-in" data-aos-delay="600">카드3</div>
+  </div>
+</section>
+
+11.5 5단계: 상호작용 요소들
+<!-- 카운터 -->
+<div class="counter" data-counter="1500" data-aos="fade-up">0</div>
+
+<!-- 프로그레스 바 -->
+<div class="circle-progress" data-percentage="85" data-aos="zoom-in">
+  <span>0%</span>
+</div>
+
+12. 주의사항 및 베스트 프랙티스
+================================================================================
+
+12.1 중요 주의사항
+
+SEO 관련:
+- 중요한 콘텐츠는 AOS 없이도 접근 가능해야 함
+- noscript 태그로 JavaScript 비활성화 시 대응
+
+성능 관련:
+- 스크롤 이벤트 과다 사용 방지
+- 메모리 누수 방지를 위한 observer 정리
+- 모바일에서 복잡한 애니메이션 제한
+
+12.2 베스트 프랙티스
+
+애니메이션 계층화:
+- 순차적 등장 효과 활용
+- 200ms 간격으로 지연 시간 설정
+- 관련 요소들 그룹화
+
+적절한 지연 시간:
+- 기본: 200ms 간격
+- 빠른 페이지: 100ms 간격  
+- 여유로운 페이지: 300ms 간격
+
+모바일 최적화:
+const isMobile = window.innerWidth <= 768;
+AOS.init({
+  duration: isMobile ? 300 : 600,
+  disable: isMobile ? 'phone' : false
+});
+
+13. 테스트 계획
+================================================================================
+
+13.1 기능 테스트
+□ 각 애니메이션 타입 동작 확인
+□ 지연 시간 정확성 확인
+□ 반복 애니메이션 테스트
+□ 스크롤 위치별 트리거 확인
+
+13.2 성능 테스트
+□ 페이지 로딩 시간 측정
+□ 메모리 사용량 모니터링
+□ CPU 사용률 확인
+□ 배터리 소모량 테스트
+
+13.3 호환성 테스트
+□ 각 브라우저별 동작 확인
+□ 모바일 기기 테스트
+□ 다양한 화면 크기 대응
+
+13.4 접근성 테스트
+□ 키보드 네비게이션 확인
+□ 스크린 리더 호환성
+□ 모션 감소 설정 대응
+
+14. 디버깅 가이드
+================================================================================
+
+14.1 일반적인 문제와 해결책
+
+문제: 애니메이션이 작동하지 않음
+해결책:
+1. AOS 초기화 확인: console.log('AOS initialized:', AOS);
+2. 요소 확인: console.log('AOS elements:', document.querySelectorAll('[data-aos]'));
+3. 강제 새로고침: AOS.refresh();
+
+문제: 성능 저하
+해결책:
+1. 애니메이션 요소 개수 줄이기
+2. 복잡한 CSS 속성 사용 자제
+3. will-change 속성 적절히 사용
+
+14.2 디버깅 도구
+
+개발자 콘솔 명령어:
+// 모든 AOS 요소 확인
+Array.from(document.querySelectorAll('[data-aos]')).map(el => ({
+  element: el,
+  animation: el.dataset.aos,
+  delay: el.dataset.aosDelay
+}));
+
+// 수동 애니메이션 트리거
+document.querySelector('.my-element').classList.add('aos-animate');
+
+15. 유지보수 가이드
+================================================================================
+
+15.1 정기 점검 사항
+- AOS 라이브러리 버전 업데이트
+- 성능 지표 모니터링
+- 사용자 피드백 수집 및 개선
+
+15.2 업데이트 절차
+1. 개발 환경에서 새 버전 테스트
+2. 기존 커스터마이징 코드 호환성 확인
+3. 점진적 배포 (A/B 테스트)
+4. 성능 모니터링 및 롤백 준비
+
+16. 세부 구현 가이드
+================================================================================
+
+16.1 플로팅 버튼 (원본 스타일 적용)
+.quick {
+  position: fixed;
+  bottom: 150px;
+  right: 80px;
+  z-index: 9999;
+  transition: all 0.3s ease;
+  animation: upAndDown 2s infinite forwards;
+}
+
+@keyframes upAndDown {
+  0% { bottom: 140px; }
+  50% { bottom: 120px; }
+  100% { bottom: 140px; }
+}
+
+HTML:
+<div class="quick" data-aos="zoom-in" data-aos-delay="2000">
+  <a href="#contact">
+    <img src="./img/quick-icon.png" alt="">
+    빠른<br>상담
+  </a>
+</div>
+
+16.2 그라데이션 배경 애니메이션
+.gradient-bg {
+  background: linear-gradient(-45deg, #ea5402, #cb4825, #f18426, #de4d14);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+16.3 카드 호버 효과
+.card-animated {
+  position: relative;
+  background: #fff;
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-animated:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+17. 반응형 대응
+================================================================================
+
+17.1 태블릿 (768px ~ 1024px)
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .quick {
+    right: 40px;
+  }
+  
+  .quick a {
+    width: 120px;
+    height: 120px;
+    font-size: 18px;
+  }
+}
+
+17.2 모바일 (0 ~ 767px)
+@media screen and (max-width: 767px) {
+  @keyframes upAndDown {
+    0% { bottom: 0px; }
+    50% { bottom: 0px; }
+    100% { bottom: 0px; }
+  }
+  
+  .quick {
+    width: 100%;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+  }
+  
+  .quick a {
+    height: 45px;
+    width: 100%;
+    border-radius: 0;
+    flex-direction: row;
+  }
+}
+
+18. 최종 체크리스트
+================================================================================
+
+구현 전 준비사항:
+□ AOS 라이브러리 CDN/로컬 설치 결정
+□ 브라우저 지원 범위 확정
+□ 성능 목표 설정
+□ 접근성 요구사항 확인
+
+구현 중 확인사항:
+□ HTML에 data-aos 속성 정확히 적용
+□ CSS 애니메이션 스타일 충돌 확인
+□ JavaScript 초기화 코드 정상 작동
+□ 모바일 반응형 테스트
+
+구현 후 검증사항:
+□ 모든 브라우저에서 정상 작동
+□ 성능 지표 목표치 달성
+□ 접근성 가이드라인 준수
+□ 사용자 테스트 완료
+
+================================================================================
+끝
+================================================================================
+
+이 문서를 참고하여 단계별로 구현하면 완성도 높은 AOS 애니메이션 효과를 적용할 수 있습니다. 각 단계마다 테스트를 진행하고, 성능과 접근성을 항상 고려하며 구현하시기 바랍니다.

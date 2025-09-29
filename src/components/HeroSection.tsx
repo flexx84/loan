@@ -220,25 +220,6 @@ const HeroSection = () => {
               }}
             >
               <div className="hero-text-block">
-                {/* 상단 파란색 텍스트 */}
-                <div
-                  className="hero-subtitle"
-                  data-aos="fade-up"
-                  data-aos-duration="600"
-                  data-aos-offset="-1000"
-                  data-aos-delay="0"
-                  data-aos-once="false"
-                >
-                  <p
-                    className="font-bold"
-                    style={{
-                      color: heroTextSettings.subtitleColor || "#2563eb",
-                    }}
-                  >
-                    *소득확인만 되면 높은 승인률!!*
-                  </p>
-                </div>
-
                 {/* 메인 타이틀 */}
                 <div
                   className="hero-title-wrap"
@@ -257,6 +238,25 @@ const HeroSection = () => {
                       height={12}
                       className="title-decoration"
                     />
+                  </div>
+                  
+                  {/* 라인 아래 소득확인 텍스트 */}
+                  <div
+                    className="hero-subtitle mb-4"
+                    data-aos="fade-up"
+                    data-aos-duration="600"
+                    data-aos-offset="-1000"
+                    data-aos-delay="0"
+                    data-aos-once="false"
+                  >
+                    <p
+                      className="font-bold"
+                      style={{
+                        color: "#000000",
+                      }}
+                    >
+                      *소득확인만 되면 높은 승인률!!*
+                    </p>
                   </div>
                   <h1
                     className={`hero-main-title ${

@@ -1187,6 +1187,11 @@ body {
     width: 350px !important;
     height: 262px !important;
   }
+  
+  /* 연체자 텍스트 모바일 폰트 크기 줄이기 */
+  .hero-description p.font-bold.mt-4 {
+    font-size: 0.875rem !important; /* 14px, 기본 16px에서 줄임 */
+  }
 }
 
 /* 반응형 대응 (PRD 17) */

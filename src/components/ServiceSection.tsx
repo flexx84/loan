@@ -180,23 +180,35 @@ const ServiceSection = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-6">
-            {process.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                    {step.step}
-                  </div>
-                  {index < process.length - 1 && (
-                    <ArrowRight className="hidden md:block absolute top-1/2 -right-8 transform -translate-y-1/2 w-6 h-6 text-gray-400" />
-                  )}
+          <ul className="ul-type1">
+            <li>
+              <div className="ult1-div">
+                <div>
+                  <span>금리</span>
+                  <strong>연 3.9%~</strong>
+                  <p>부터</p>
                 </div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                  {step.title}
-                </h4>
-                <p className="text-gray-600">{step.desc}</p>
               </div>
-            ))}
+            </li>
+            <li>
+              <div className="ult1-div">
+                <div>
+                  <span>한도</span>
+                  <strong>최대 1억원</strong>
+                  <p></p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="ult1-div">
+                <div>
+                  <span>상환기간</span>
+                  <strong>최장 10년</strong>
+                  <p></p>
+                </div>
+              </div>
+            </li>
+          </ul>
           </div>
         </div>
 

@@ -103,15 +103,15 @@ const BackgroundContext = createContext<BackgroundContextType | undefined>(
 );
 
 const defaultHeroSettings: BackgroundSettings = {
-  image: "gradient-blue",
+  image: "/images/hero/CK_td01830000604_l_1758789035114_mobile.webp",
   opacity: 100,
   size: "cover",
   position: "center",
   attachment: "scroll",
   overlay: {
-    enabled: false,
-    color: "#000000",
-    opacity: 30,
+    enabled: true,
+    color: "#ffffff",
+    opacity: 68,
   },
 };
 
@@ -119,8 +119,8 @@ const defaultHeroImageSettings: HeroImageSettings = {
   image: "/ZLGyUnGMg6GvctEx8LUCBP9Fwo.avif",
   position: {
     desktop: {
-      x: 70, // 데스크톱: 오른쪽 중앙 위치 (70%)
-      y: 50, // 데스크톱: 세로 중앙 위치 (50%)
+      x: 63, // 데스크톱: 위치 (63%)
+      y: 50, // 데스크톱: 중앙 위치 (50%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
@@ -129,17 +129,17 @@ const defaultHeroImageSettings: HeroImageSettings = {
   },
   size: {
     desktop: {
-      width: 450,
-      height: 600,
+      width: 800,
+      height: 300,
     },
     mobile: {
-      width: 280,
-      height: 372,
+      width: 300,
+      height: 112,
     },
   },
   opacity: 100,
   attachment: "scroll",
-  bottomFixed: false,
+  bottomFixed: true,
 };
 
 const defaultHeroTextSettings: HeroTextSettings = {
@@ -150,7 +150,7 @@ const defaultHeroTextSettings: HeroTextSettings = {
   titleSize: "large",
   position: {
     desktop: {
-      x: 25, // 데스크톱: 왼쪽 위치 (25%)
+      x: 22, // 데스크톱: 왼쪽 위치 (22%)
       y: 50, // 데스크톱: 중앙 수직 위치 (50%)
     },
     mobile: {

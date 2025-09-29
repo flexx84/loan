@@ -151,7 +151,7 @@ const defaultHeroTextSettings: HeroTextSettings = {
   position: {
     desktop: {
       x: 22, // 데스크톱: 왼쪽 위치 (22%)
-      y: 50, // 데스크톱: 중앙 수직 위치 (50%)
+      y: 45, // 데스크톱: 수직 위치 (45%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
@@ -164,8 +164,8 @@ const defaultHeroTextSettings: HeroTextSettings = {
 const defaultPaymentCardSettings: PaymentCardSettings = {
   position: {
     desktop: {
-      x: 85, // 데스크톱: 우상단 위치 (85%)
-      y: 25, // 데스크톱: 상단 위치 (25%)
+      x: 67, // 데스크톱: 위치 (67%)
+      y: 32, // 데스크톱: 위치 (32%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
@@ -181,8 +181,8 @@ const defaultPaymentCardSettings: PaymentCardSettings = {
 const defaultPaymentCard2Settings: PaymentCard2Settings = {
   position: {
     desktop: {
-      x: 85, // 데스크톱: 우하단 위치 (85%)
-      y: 75, // 데스크톱: 하단 위치 (75%)
+      x: 81, // 데스크톱: 위치 (81%)
+      y: 66, // 데스크톱: 위치 (66%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
@@ -192,7 +192,7 @@ const defaultPaymentCard2Settings: PaymentCard2Settings = {
   size: "medium",
   opacity: 95,
   visible: true,
-  attachment: "fixed",
+  attachment: "scroll",
   title: "빠른 승인!",
   subtitle: "당일 처리",
   description: "신속한 대출 서비스!",

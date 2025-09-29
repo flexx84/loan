@@ -1161,6 +1161,13 @@ body {
   }
 }
 
+/* Payment Card 모바일 숨김 */
+@media screen and (max-width: 767px) {
+  .payment-card {
+    display: none !important;
+  }
+}
+
 /* 반응형 대응 (PRD 17) */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .quick {

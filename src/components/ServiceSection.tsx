@@ -208,6 +208,15 @@ const ServiceSection = () => {
                 </div>
               </div>
             </li>
+            <li>
+              <div className="ult1-div">
+                <div>
+                  <span>승인시간</span>
+                  <strong>24시간</strong>
+                  <p>이내</p>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
 

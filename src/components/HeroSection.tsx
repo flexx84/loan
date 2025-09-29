@@ -338,28 +338,6 @@ const HeroSection = () => {
 
           {/* Hero Image Block - 오른쪽 이미지 영역 */}
           <div className="hero-image-block">
-            {/* User Block */}
-            <div
-              className="user-block"
-              data-aos="fade-up"
-              data-aos-duration="600"
-              data-aos-delay="700"
-            >
-              <div className="stats-block">
-                <div className="stats-text">
-                  <p className="text-blue-600 font-bold">
-                    <strong>조회</strong>
-                    <span className="text-gray-700">부터</span>{" "}
-                    <strong>신청, 승인</strong>{" "}
-                    <span className="text-gray-700">까지</span>{" "}
-                    <strong>한번에!</strong>
-                  </p>
-                </div>
-                <div className="user-text">
-                  <p className="text-gray-600">당일진행 간편하고 빠르게</p>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Payment Card 1 - 위치 조절 가능 */}

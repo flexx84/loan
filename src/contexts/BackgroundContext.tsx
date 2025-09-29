@@ -155,7 +155,7 @@ const defaultHeroTextSettings: HeroTextSettings = {
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 70, // 모바일: 아래쪽 위치 (70%)
+      y: 31, // 모바일: 위쪽 위치 (31%)
     },
   },
   attachment: "scroll",

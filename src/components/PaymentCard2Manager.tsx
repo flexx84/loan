@@ -477,3 +477,4 @@ const PaymentCard2Manager: React.FC<PaymentCard2ManagerProps> = ({
 };
 
 export default PaymentCard2Manager;
+

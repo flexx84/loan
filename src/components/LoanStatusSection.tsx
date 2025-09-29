@@ -574,7 +574,18 @@ const LoanStatusSection = () => {
   // Slick 스타일 무한 루프 슬라이더
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const visibleItems = 6; // 화면에 보이는 아이템 수
+
+  // 화면 크기 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // 무한 루프를 위한 확장된 배열 생성 (앞뒤로 복제)
   const getInfiniteItems = () => {
@@ -725,181 +736,114 @@ const LoanStatusSection = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* 제목 섹션 */}
-        <div
-          className="text-center mb-16"
-          data-aos="fade-up"
-          data-aos-duration="800"
-        >
-          <div className="inline-flex items-center px-4 py-2 bg-white bg-opacity-90 rounded-full shadow-sm mb-6">
-            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-            <span className="text-sm font-semibold text-gray-700">
-              실시간 업데이트
-            </span>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-lg">
-            <span className="text-yellow-300">2025년 09월 24일</span> 기준
-            <br />
-            근로자 신용지키미{" "}
-            <span className="text-cyan-200">실시간 신청현황</span>
-          </h2>
-          <p className="text-xl text-white text-opacity-90 max-w-3xl mx-auto drop-shadow-md">
-            지금 이 순간에도 많은 분들이 신청하고 승인받고 계십니다
-          </p>
-        </div>
-
-        {/* 통계 카운터 */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div
-            className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100"
-            data-aos="zoom-in-up"
-            data-aos-duration="600"
-            data-aos-delay="100"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <TrendingUp className="w-12 h-12 text-green-500" />
-              <span className="text-green-500 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
-                누적 대출금액
-              </span>
-            </div>
-            <div className="counter text-4xl font-bold text-gray-900 mb-2">
-              {counters.totalAmount.toLocaleString()}억
-            </div>
-            <p className="text-gray-600">총 대출 승인 금액</p>
-          </div>
-
-          <div
-            className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100"
-            data-aos="zoom-in-up"
-            data-aos-duration="600"
-            data-aos-delay="200"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <Eye className="w-12 h-12 text-blue-500" />
-              <span className="text-blue-500 text-sm font-semibold bg-blue-50 px-3 py-1 rounded-full">
-                누적 대출조회
-              </span>
-            </div>
-            <div className="counter text-4xl font-bold text-gray-900 mb-2">
-              {counters.totalInquiries.toLocaleString()}회
-            </div>
-            <p className="text-gray-600">총 대출 조회 횟수</p>
-          </div>
-
-          <div
-            className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100"
-            data-aos="zoom-in-up"
-            data-aos-duration="600"
-            data-aos-delay="300"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <CheckCircle className="w-12 h-12 text-purple-500" />
-              <span className="text-purple-500 text-sm font-semibold bg-purple-50 px-3 py-1 rounded-full">
-                평균 승인비율
-              </span>
-            </div>
-            <div className="counter text-4xl font-bold text-gray-900 mb-2">
-              {counters.approvalRate}%
-            </div>
-            <p className="text-gray-600">대출 승인 성공률</p>
-          </div>
-        </div>
-
-        {/* 실시간 신청 현황 테이블 */}
-        <div
-          className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
-          data-aos="fade-up"
-          data-aos-duration="800"
-          data-aos-delay="400"
-        >
-          {/* 테이블 헤더 */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
-            <div className="grid grid-cols-4 gap-4 font-semibold text-lg">
-              <div className="flex items-center">
-                <Users className="w-5 h-5 mr-2" />
-                진행상황
-              </div>
-              <div>신청자 조건</div>
-              <div>대출금액</div>
-              <div className="text-center">상태</div>
-            </div>
-          </div>
-
-          {/* 테이블 바디 - Slick 스타일 무한 루프 슬라이더 */}
-          <div className="h-96 overflow-hidden relative slide-container">
-            <div
-              className={`${
-                isTransitioning
-                  ? "transition-transform duration-1000 ease-in-out"
-                  : ""
-              }`}
-              style={{
-                transform: `translateY(-${currentIndex * 60}px)`,
-              }}
+        <div className="box-area">
+          <div className="title">
+            <p 
+              data-aos="fade-up" 
+              data-aos-duration="500" 
+              className="aos-init aos-animate text-center mb-16"
             >
-              {infiniteItems.map((app, index) => (
+              <em className="text-yellow-300 font-semibold">2025년 09월 29일 기준</em>
+              <br className="block md:hidden" />
+              <span className="text-white text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg">
+                근로자 신용지키미 실시간 신청현황
+              </span>
+            </p>
+          </div>
+
+          {/* 실시간 신청 현황 테이블 */}
+          <div 
+            className="box3-list aos-init aos-animate" 
+            data-aos="fade-up" 
+            data-aos-delay="100" 
+            data-aos-duration="500"
+          >
+            <div className="b3l-top bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-t-lg">
+              <div className="grid grid-cols-3 gap-4 font-semibold text-sm md:text-base">
+                <p className="text-center">진행상황</p>
+                <p className="text-center">신청자 조건</p>
+                <p className="text-center">대출금액</p>
+              </div>
+            </div>
+            <div className="b3l-ul bg-white rounded-b-lg shadow-xl border border-gray-100">
+              <div className="h-80 md:h-96 overflow-hidden relative slide-container">
                 <div
-                  key={`${app.id}-${index}`}
-                  className={`grid grid-cols-4 gap-4 p-4 border-b border-gray-100 hover:bg-gray-50 transition-all duration-300 ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  className={`${
+                    isTransitioning
+                      ? "transition-transform duration-1000 ease-in-out"
+                      : ""
                   }`}
                   style={{
-                    height: "60px",
-                    // 페이드 효과: 상단과 하단의 아이템들은 약간 투명하게
-                    opacity: Math.abs(index - currentIndex - 3) > 2 ? 0.5 : 1,
+                    transform: `translateY(-${currentIndex * (isMobile ? 80 : 65)}px)`,
                   }}
                 >
-                  <div className="flex items-center">
+                  {infiniteItems.map((app, index) => (
                     <div
-                      className={`px-3 py-1 rounded-full text-sm font-semibold border ${getStatusStyle(
-                        app.status
-                      )}`}
+                      key={`${app.id}-${index}`}
+                      className={`grid grid-cols-3 gap-2 md:gap-4 p-3 md:p-4 border-b border-gray-100 hover:bg-gray-50 transition-all duration-300 ${
+                        index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      }`}
+                      style={{
+                        height: isMobile ? "80px" : "65px",
+                        opacity: Math.abs(index - currentIndex - 3) > 2 ? 0.5 : 1,
+                      }}
                     >
-                      {app.status}
+                      <div className="flex items-center justify-center">
+                        <span 
+                          className={`px-2 py-1 rounded-full text-xs md:text-sm font-semibold border ${
+                            app.status === "승인완료" ? "bu-span2 bg-green-100 text-green-800 border-green-200" :
+                            app.status === "심사중" ? "bu-span1 bg-blue-100 text-blue-800 border-blue-200" :
+                            "bu-span3 bg-gray-100 text-gray-800 border-gray-200"
+                          }`}
+                        >
+                          {app.status}
+                        </span>
+                      </div>
+                      <div className="text-xs md:text-sm text-gray-700 text-center">
+                        <div className="font-semibold">{app.age}</div>
+                        <div className="text-xs text-gray-600">{app.company}</div>
+                        <div className="text-blue-600 font-semibold text-xs">
+                          개인신용점수 {app.creditScore}점
+                        </div>
+                      </div>
+                      <div className="font-bold text-gray-900 text-sm md:text-base text-center">
+                        {app.amount.toLocaleString()}만원
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-sm text-gray-700">
-                    <span className="font-semibold">{app.age}</span> /{" "}
-                    {app.company} /
-                    <span className="text-blue-600 font-semibold">
-                      {" "}
-                      개인신용점수 {app.creditScore}점
-                    </span>
-                  </div>
-                  <div className="font-bold text-gray-900 text-lg">
-                    {app.amount.toLocaleString()}만원
-                  </div>
-                  <div className="text-center">
-                    {app.status === "승인완료" && (
-                      <CheckCircle className="w-5 h-5 text-green-500 mx-auto" />
-                    )}
-                    {app.status === "심사중" && (
-                      <Clock className="w-5 h-5 text-blue-500 mx-auto animate-spin" />
-                    )}
-                    {app.status === "대기중" && (
-                      <Clock className="w-5 h-5 text-gray-500 mx-auto" />
-                    )}
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
 
-          {/* 실시간 업데이트 인디케이터 */}
-          <div className="p-4 text-center bg-gradient-to-r from-blue-50 to-indigo-50">
-            <div className="flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <div
-                className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"
-                style={{ animationDelay: "0.2s" }}
-              ></div>
-              <div
-                className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                style={{ animationDelay: "0.4s" }}
-              ></div>
-              <span className="ml-2 text-gray-600 font-semibold">
-                실시간 업데이트 중...
-              </span>
-            </div>
+          {/* 통계 카운터 */}
+          <div className="box-counter mt-8">
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <li className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-gray-100 text-center">
+                <span className="text-green-500 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full inline-block mb-4">
+                  누적대출금액
+                </span>
+                <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  <em className="counter not-italic">{counters.totalAmount.toLocaleString()}</em>억
+                </p>
+              </li>
+              <li className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-gray-100 text-center">
+                <span className="text-blue-500 text-sm font-semibold bg-blue-50 px-3 py-1 rounded-full inline-block mb-4">
+                  누적대출조회
+                </span>
+                <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  <em className="counter not-italic">{counters.totalInquiries.toLocaleString()}</em>회
+                </p>
+              </li>
+              <li className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-gray-100 text-center">
+                <span className="text-purple-500 text-sm font-semibold bg-purple-50 px-3 py-1 rounded-full inline-block mb-4">
+                  평균 대출 승인비율
+                </span>
+                <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  <em className="counter not-italic">{counters.approvalRate}</em>%
+                </p>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -1006,6 +950,25 @@ const LoanStatusSection = () => {
             black 90%,
             transparent 100%
           );
+        }
+
+        /* bu-span 스타일 */
+        .bu-span1 {
+          background-color: #dbeafe;
+          color: #1e40af;
+          border-color: #93c5fd;
+        }
+        
+        .bu-span2 {
+          background-color: #dcfce7;
+          color: #166534;
+          border-color: #86efac;
+        }
+        
+        .bu-span3 {
+          background-color: #f3f4f6;
+          color: #374151;
+          border-color: #d1d5db;
         }
       `}</style>
     </section>

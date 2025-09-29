@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AOSInit from "@/components/AOSInit";
+import FloatingButton from "@/components/FloatingButton";
 import { BackgroundProvider } from "@/contexts/BackgroundContext";
 
 const geistSans = Geist({
@@ -67,6 +68,7 @@ export default function RootLayout({
         <BackgroundProvider>
           <AOSInit />
           {children}
+          <FloatingButton />
         </BackgroundProvider>
       </body>
     </html>

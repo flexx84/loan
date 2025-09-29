@@ -120,24 +120,24 @@ const defaultHeroImageSettings: HeroImageSettings = {
   position: {
     desktop: {
       x: 75, // 데스크톱: 오른쪽 위치 (75%)
-      y: 50, // 데스크톱: 중앙 수직 위치 (50%)
+      y: 30, // 데스크톱: 위쪽 위치 (30%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 30, // 모바일: 위쪽 위치 (30%)
+      y: 20, // 모바일: 위쪽 위치 (20%)
     },
   },
   size: {
     desktop: {
-      width: 400,
-      height: 300,
+      width: 500,
+      height: 375,
     },
     mobile: {
-      width: 280,
-      height: 210,
+      width: 320,
+      height: 240,
     },
   },
-  opacity: 100,
+  opacity: 85,
   attachment: "scroll",
   bottomFixed: false,
 };
@@ -165,15 +165,15 @@ const defaultPaymentCardSettings: PaymentCardSettings = {
   position: {
     desktop: {
       x: 65, // 데스크톱: 오른쪽 위치 (65%)
-      y: 35, // 데스크톱: 위쪽 위치 (35%)
+      y: 45, // 데스크톱: 중간 위치 (45%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 20, // 모바일: 위쪽 위치 (20%)
+      y: 35, // 모바일: 위쪽 위치 (35%)
     },
   },
   size: "medium",
-  opacity: 100,
+  opacity: 95,
   visible: true,
   attachment: "scroll",
 };
@@ -182,22 +182,22 @@ const defaultPaymentCard2Settings: PaymentCard2Settings = {
   position: {
     desktop: {
       x: 75, // 데스크톱: 오른쪽 위치 (75%)
-      y: 60, // 데스크톱: 아래쪽 위치 (60%)
+      y: 65, // 데스크톱: 아래쪽 위치 (65%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 50, // 모바일: 중앙 위치 (50%)
+      y: 55, // 모바일: 중앙 위치 (55%)
     },
   },
   size: "medium",
-  opacity: 90,
+  opacity: 92,
   visible: true,
   attachment: "fixed",
   title: "빠른 승인!",
   subtitle: "당일 처리",
   description: "신속한 대출 서비스!",
   titleColor: "#1f2937",
-  subtitleColor: "#059669",
+  subtitleColor: "#2563eb",
   descriptionColor: "#059669",
 };
 

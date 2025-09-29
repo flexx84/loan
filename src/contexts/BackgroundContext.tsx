@@ -119,25 +119,25 @@ const defaultHeroImageSettings: HeroImageSettings = {
   image: "/ZLGyUnGMg6GvctEx8LUCBP9Fwo.avif",
   position: {
     desktop: {
-      x: 75, // 데스크톱: 오른쪽 위치 (75%)
-      y: 30, // 데스크톱: 위쪽 위치 (30%)
+      x: 70, // 데스크톱: 오른쪽 중앙 위치 (70%)
+      y: 50, // 데스크톱: 세로 중앙 위치 (50%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 20, // 모바일: 위쪽 위치 (20%)
+      y: 25, // 모바일: 위쪽 위치 (25%)
     },
   },
   size: {
     desktop: {
-      width: 500,
-      height: 375,
+      width: 450,
+      height: 600,
     },
     mobile: {
-      width: 320,
-      height: 240,
+      width: 280,
+      height: 372,
     },
   },
-  opacity: 85,
+  opacity: 100,
   attachment: "scroll",
   bottomFixed: false,
 };
@@ -164,12 +164,12 @@ const defaultHeroTextSettings: HeroTextSettings = {
 const defaultPaymentCardSettings: PaymentCardSettings = {
   position: {
     desktop: {
-      x: 65, // 데스크톱: 오른쪽 위치 (65%)
-      y: 45, // 데스크톱: 중간 위치 (45%)
+      x: 85, // 데스크톱: 우상단 위치 (85%)
+      y: 25, // 데스크톱: 상단 위치 (25%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 35, // 모바일: 위쪽 위치 (35%)
+      y: 15, // 모바일: 위쪽 위치 (15%)
     },
   },
   size: "medium",
@@ -181,16 +181,16 @@ const defaultPaymentCardSettings: PaymentCardSettings = {
 const defaultPaymentCard2Settings: PaymentCard2Settings = {
   position: {
     desktop: {
-      x: 75, // 데스크톱: 오른쪽 위치 (75%)
-      y: 65, // 데스크톱: 아래쪽 위치 (65%)
+      x: 85, // 데스크톱: 우하단 위치 (85%)
+      y: 75, // 데스크톱: 하단 위치 (75%)
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 55, // 모바일: 중앙 위치 (55%)
+      y: 65, // 모바일: 아래쪽 위치 (65%)
     },
   },
   size: "medium",
-  opacity: 92,
+  opacity: 95,
   visible: true,
   attachment: "fixed",
   title: "빠른 승인!",

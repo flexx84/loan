@@ -124,7 +124,7 @@ const defaultHeroImageSettings: HeroImageSettings = {
     },
     mobile: {
       x: 50, // 모바일: 중앙 위치 (50%)
-      y: 25, // 모바일: 위쪽 위치 (25%)
+      y: 15, // 모바일: 위쪽 위치 (15%)
     },
   },
   size: {
@@ -133,8 +133,8 @@ const defaultHeroImageSettings: HeroImageSettings = {
       height: 300,
     },
     mobile: {
-      width: 300,
-      height: 112,
+      width: 380,
+      height: 300,
     },
   },
   opacity: 100,

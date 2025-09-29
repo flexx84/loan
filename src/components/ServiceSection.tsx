@@ -209,7 +209,6 @@ const ServiceSection = () => {
               </div>
             </li>
           </ul>
-          </div>
         </div>
 
         {/* CTA Section */}

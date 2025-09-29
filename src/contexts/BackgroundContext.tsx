@@ -74,27 +74,59 @@ export interface UserBlockSettings {
   attachment: "fixed" | "scroll";
 }
 
+export interface LoanCardSettings {
+  id: string;
+  visible: boolean;
+  title: string;
+  description: string;
+  features: string[];
+  color: "blue" | "green" | "purple" | "orange";
+  icon: string;
+  background: {
+    enabled: boolean;
+    type: "color" | "gradient" | "image";
+    color: string;
+    gradient: {
+      from: string;
+      to: string;
+      direction: "to-r" | "to-l" | "to-t" | "to-b" | "to-br" | "to-bl" | "to-tr" | "to-tl";
+    };
+    image: string;
+    opacity: number; // 0-100
+  };
+  textColor: {
+    title: string;
+    description: string;
+    features: string;
+  };
+}
+
 interface BackgroundContextType {
   heroSettings: BackgroundSettings;
   loanSettings: BackgroundSettings;
+  serviceSettings: BackgroundSettings;
   heroImageSettings: HeroImageSettings;
   heroTextSettings: HeroTextSettings;
   paymentCardSettings: PaymentCardSettings;
   paymentCard2Settings: PaymentCard2Settings;
   userBlockSettings: UserBlockSettings;
+  loanCardSettings: LoanCardSettings[];
   updateHeroSettings: (settings: BackgroundSettings) => void;
   updateLoanSettings: (settings: BackgroundSettings) => void;
+  updateServiceSettings: (settings: BackgroundSettings) => void;
   updateHeroImageSettings: (settings: HeroImageSettings) => void;
   updateHeroTextSettings: (settings: HeroTextSettings) => void;
   updatePaymentCardSettings: (settings: PaymentCardSettings) => void;
   updatePaymentCard2Settings: (settings: PaymentCard2Settings) => void;
   updateUserBlockSettings: (settings: UserBlockSettings) => void;
+  updateLoanCardSettings: (settings: LoanCardSettings[]) => void;
   customBackgrounds: {
     hero: string[];
     loan: string[];
+    service: string[];
   };
-  addCustomBackground: (section: "hero" | "loan", path: string) => void;
-  removeCustomBackground: (section: "hero" | "loan", path: string) => void;
+  addCustomBackground: (section: "hero" | "loan" | "service", path: string) => void;
+  removeCustomBackground: (section: "hero" | "loan" | "service", path: string) => void;
   isClient: boolean;
 }
 
@@ -231,6 +263,126 @@ const defaultLoanSettings: BackgroundSettings = {
   },
 };
 
+const defaultServiceSettings: BackgroundSettings = {
+  image: "",
+  opacity: 100,
+  size: "cover",
+  position: "center",
+  attachment: "scroll",
+  overlay: {
+    enabled: false,
+    color: "#ffffff",
+    opacity: 50,
+  },
+};
+
+const defaultLoanCardSettings: LoanCardSettings[] = [
+  {
+    id: "credit-loan",
+    visible: true,
+    title: "신용대출",
+    description: "담보 없이 신용도만으로 대출",
+    features: ["최대 1억원", "연 3.5%~", "24시간 승인"],
+    color: "blue",
+    icon: "CreditCard",
+    background: {
+      enabled: false,
+      type: "color",
+      color: "#ffffff",
+      gradient: {
+        from: "#3b82f6",
+        to: "#1d4ed8",
+        direction: "to-br",
+      },
+      image: "",
+      opacity: 100,
+    },
+    textColor: {
+      title: "#1f2937",
+      description: "#6b7280",
+      features: "#374151",
+    },
+  },
+  {
+    id: "mortgage-loan",
+    visible: true,
+    title: "주택담보대출",
+    description: "내 집을 담보로 저금리 대출",
+    features: ["최대 20억원", "연 2.5%~", "LTV 80%"],
+    color: "green",
+    icon: "Home",
+    background: {
+      enabled: false,
+      type: "color",
+      color: "#ffffff",
+      gradient: {
+        from: "#10b981",
+        to: "#059669",
+        direction: "to-br",
+      },
+      image: "",
+      opacity: 100,
+    },
+    textColor: {
+      title: "#1f2937",
+      description: "#6b7280",
+      features: "#374151",
+    },
+  },
+  {
+    id: "business-loan",
+    visible: true,
+    title: "사업자대출",
+    description: "사업자등록증으로 사업자금 조달",
+    features: ["최대 10억원", "연 4.0%~", "서류간소화"],
+    color: "purple",
+    icon: "Briefcase",
+    background: {
+      enabled: false,
+      type: "color",
+      color: "#ffffff",
+      gradient: {
+        from: "#8b5cf6",
+        to: "#7c3aed",
+        direction: "to-br",
+      },
+      image: "",
+      opacity: 100,
+    },
+    textColor: {
+      title: "#1f2937",
+      description: "#6b7280",
+      features: "#374151",
+    },
+  },
+  {
+    id: "property-loan",
+    visible: true,
+    title: "부동산담보대출",
+    description: "부동산을 담보로 한 대출",
+    features: ["최대 50억원", "연 3.0%~", "높은 한도"],
+    color: "orange",
+    icon: "Building2",
+    background: {
+      enabled: false,
+      type: "color",
+      color: "#ffffff",
+      gradient: {
+        from: "#f97316",
+        to: "#ea580c",
+        direction: "to-br",
+      },
+      image: "",
+      opacity: 100,
+    },
+    textColor: {
+      title: "#1f2937",
+      description: "#6b7280",
+      features: "#374151",
+    },
+  },
+];
+
 export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -239,6 +391,8 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
     useState<BackgroundSettings>(defaultHeroSettings);
   const [loanSettings, setLoanSettings] =
     useState<BackgroundSettings>(defaultLoanSettings);
+  const [serviceSettings, setServiceSettings] =
+    useState<BackgroundSettings>(defaultServiceSettings);
   const [heroImageSettings, setHeroImageSettings] = useState<HeroImageSettings>(
     defaultHeroImageSettings
   );
@@ -252,12 +406,17 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userBlockSettings, setUserBlockSettings] = useState<UserBlockSettings>(
     defaultUserBlockSettings
   );
+  const [loanCardSettings, setLoanCardSettings] = useState<LoanCardSettings[]>(
+    defaultLoanCardSettings
+  );
   const [customBackgrounds, setCustomBackgrounds] = useState<{
     hero: string[];
     loan: string[];
+    service: string[];
   }>({
     hero: [],
     loan: [],
+    service: [],
   });
 
   // 클라이언트 사이드에서만 실행
@@ -283,6 +442,15 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
         if (savedLoanSettings) {
           const parsed = JSON.parse(savedLoanSettings);
           setLoanSettings(parsed);
+        }
+
+        // 서비스 섹션 설정 로딩
+        const savedServiceSettings = localStorage.getItem(
+          "service-background-settings"
+        );
+        if (savedServiceSettings) {
+          const parsed = JSON.parse(savedServiceSettings);
+          setServiceSettings(parsed);
         }
 
         // 히어로 이미지 설정 로딩
@@ -329,6 +497,15 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
           setUserBlockSettings(parsed);
         }
 
+        // Loan Card 설정 로딩
+        const savedLoanCardSettings = localStorage.getItem(
+          "loan-card-settings"
+        );
+        if (savedLoanCardSettings) {
+          const parsed = JSON.parse(savedLoanCardSettings);
+          setLoanCardSettings(parsed);
+        }
+
         // 커스텀 배경 이미지 로딩
         const savedHeroCustomBgs = localStorage.getItem(
           "hero-custom-backgrounds"
@@ -336,10 +513,14 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
         const savedLoanCustomBgs = localStorage.getItem(
           "loan-custom-backgrounds"
         );
+        const savedServiceCustomBgs = localStorage.getItem(
+          "service-custom-backgrounds"
+        );
 
         setCustomBackgrounds({
           hero: savedHeroCustomBgs ? JSON.parse(savedHeroCustomBgs) : [],
           loan: savedLoanCustomBgs ? JSON.parse(savedLoanCustomBgs) : [],
+          service: savedServiceCustomBgs ? JSON.parse(savedServiceCustomBgs) : [],
         });
 
         console.log("✅ Background settings loaded from localStorage");
@@ -378,6 +559,21 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("loan-section-bg", settings.image);
 
       console.log("✅ Loan background settings saved:", settings);
+    }
+  };
+
+  const updateServiceSettings = (settings: BackgroundSettings) => {
+    setServiceSettings(settings);
+    if (isClient) {
+      localStorage.setItem(
+        "service-background-settings",
+        JSON.stringify(settings)
+      );
+
+      // 기존 호환성을 위해 이미지 경로도 별도 저장
+      localStorage.setItem("service-section-bg", settings.image);
+
+      console.log("✅ Service background settings saved:", settings);
     }
   };
 
@@ -421,7 +617,15 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const addCustomBackground = (section: "hero" | "loan", path: string) => {
+  const updateLoanCardSettings = (settings: LoanCardSettings[]) => {
+    setLoanCardSettings(settings);
+    if (isClient) {
+      localStorage.setItem("loan-card-settings", JSON.stringify(settings));
+      console.log("✅ Loan card settings saved:", settings);
+    }
+  };
+
+  const addCustomBackground = (section: "hero" | "loan" | "service", path: string) => {
     setCustomBackgrounds((prev) => {
       const updated = {
         ...prev,
@@ -439,7 +643,7 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const removeCustomBackground = (section: "hero" | "loan", path: string) => {
+  const removeCustomBackground = (section: "hero" | "loan" | "service", path: string) => {
     setCustomBackgrounds((prev) => {
       const updated = {
         ...prev,
@@ -460,18 +664,22 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
   const value: BackgroundContextType = {
     heroSettings,
     loanSettings,
+    serviceSettings,
     heroImageSettings,
     heroTextSettings,
     paymentCardSettings,
     paymentCard2Settings,
     userBlockSettings,
+    loanCardSettings,
     updateHeroSettings,
     updateLoanSettings,
+    updateServiceSettings,
     updateHeroImageSettings,
     updateHeroTextSettings,
     updatePaymentCardSettings,
     updatePaymentCard2Settings,
     updateUserBlockSettings,
+    updateLoanCardSettings,
     customBackgrounds,
     addCustomBackground,
     removeCustomBackground,

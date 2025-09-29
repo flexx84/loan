@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Building2,
   CreditCard,
@@ -8,39 +8,60 @@ import {
   Home,
   CheckCircle,
   ArrowRight,
+  Settings,
 } from "lucide-react";
+import { useBackground } from "@/contexts/BackgroundContext";
+import LoanCardManager from "./LoanCardManager";
+import BackgroundManager from "./BackgroundManager";
 
 const ServiceSection = () => {
-  const loanTypes = [
-    {
-      icon: CreditCard,
-      title: "신용대출",
-      description: "담보 없이 신용도만으로 대출",
-      features: ["최대 1억원", "연 3.5%~", "24시간 승인"],
-      color: "blue",
-    },
-    {
-      icon: Home,
-      title: "주택담보대출",
-      description: "내 집을 담보로 저금리 대출",
-      features: ["최대 20억원", "연 2.5%~", "LTV 80%"],
-      color: "green",
-    },
-    {
-      icon: Briefcase,
-      title: "사업자대출",
-      description: "사업자등록증으로 사업자금 조달",
-      features: ["최대 10억원", "연 4.0%~", "서류간소화"],
-      color: "purple",
-    },
-    {
-      icon: Building2,
-      title: "부동산담보대출",
-      description: "부동산을 담보로 한 대출",
-      features: ["최대 50억원", "연 3.0%~", "높은 한도"],
-      color: "orange",
-    },
-  ];
+  const { 
+    loanCardSettings, 
+    updateLoanCardSettings, 
+    serviceSettings, 
+    updateServiceSettings, 
+    customBackgrounds,
+    addCustomBackground,
+    isClient 
+  } = useBackground();
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [showLoanCardManager, setShowLoanCardManager] = useState(false);
+  const [showServiceBackgroundManager, setShowServiceBackgroundManager] = useState(false);
+
+  // localStorage에서 admin 모드 상태 로딩
+  useEffect(() => {
+    if (isClient) {
+      const adminMode = localStorage.getItem("admin-mode") === "true";
+      setIsAdminMode(adminMode);
+    }
+
+    // admin 모드 변경 이벤트 리스너
+    const handleAdminModeChange = (event: CustomEvent) => {
+      setIsAdminMode(event.detail.isAdmin);
+    };
+
+    window.addEventListener(
+      "adminModeChanged",
+      handleAdminModeChange as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        "adminModeChanged",
+        handleAdminModeChange as EventListener
+      );
+    };
+  }, [isClient]);
+
+  const getIconComponent = (iconName: string) => {
+    const iconMap = {
+      CreditCard,
+      Home,
+      Briefcase,
+      Building2,
+    };
+    return iconMap[iconName as keyof typeof iconMap] || CreditCard;
+  };
 
   const advantages = [
     {
@@ -85,8 +106,45 @@ const ServiceSection = () => {
   };
 
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section 
+      id="services" 
+      className="py-20 relative"
+      style={{
+        backgroundColor: serviceSettings.image ? 'transparent' : '#ffffff'
+      }}
+    >
+      {/* 배경 이미지 */}
+      {isClient && serviceSettings?.image && (
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: serviceSettings.opacity / 100,
+            position: serviceSettings.attachment === "fixed" ? "fixed" : "absolute",
+          }}
+        >
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `url(${serviceSettings.image})`,
+              backgroundSize: serviceSettings.size === "stretch" ? "100% 100%" : serviceSettings.size,
+              backgroundPosition: serviceSettings.position === "center" ? "center" : serviceSettings.position.replace("-", " "),
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+
+          {/* 오버레이 */}
+          {serviceSettings.overlay.enabled && (
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundColor: serviceSettings.overlay.color,
+                opacity: serviceSettings.overlay.opacity / 100,
+              }}
+            />
+          )}
+        </div>
+      )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div
           className="text-center mb-16"
@@ -103,43 +161,128 @@ const ServiceSection = () => {
         </div>
 
         {/* Loan Types */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {loanTypes.map((loan, index) => {
-            const Icon = loan.icon;
-            return (
-              <div
-                key={index}
-                className="bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-blue-200 hover:shadow-lg transition-all duration-300"
-                data-aos="fade-up"
-                data-aos-duration="800"
-                data-aos-delay={index * 100}
-              >
+        {(() => {
+          const visibleCards = loanCardSettings.filter((card) => card.visible);
+          const gridClass = 
+            visibleCards.length === 1 ? "grid-cols-1" :
+            visibleCards.length === 2 ? "grid-cols-1 md:grid-cols-2" :
+            visibleCards.length === 3 ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" :
+            "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
+          
+          return (
+            <div className={`grid gap-6 mb-20 ${gridClass}`}>
+              {visibleCards.map((card, index) => {
+              const Icon = getIconComponent(card.icon);
+              
+              // 기본값 설정 (기존 데이터 호환성)
+              const textColor = {
+                title: card.textColor?.title ?? "#1f2937",
+                description: card.textColor?.description ?? "#6b7280", 
+                features: card.textColor?.features ?? "#374151",
+              };
+              
+              // 카드 배경 스타일 생성
+              const getCardBackgroundStyle = () => {
+                // 기본값 설정 (기존 데이터 호환성)
+                const background = {
+                  enabled: card.background?.enabled ?? false,
+                  type: card.background?.type ?? "color",
+                  color: card.background?.color ?? "#ffffff",
+                  gradient: {
+                    from: card.background?.gradient?.from ?? "#3b82f6",
+                    to: card.background?.gradient?.to ?? "#1d4ed8",
+                    direction: card.background?.gradient?.direction ?? "to-br",
+                  },
+                  image: card.background?.image ?? "",
+                  opacity: card.background?.opacity ?? 100,
+                };
+
+                if (!background.enabled) {
+                  return { backgroundColor: '#ffffff' };
+                }
+
+                const opacity = (typeof background.opacity === 'number' && !isNaN(background.opacity)) 
+                  ? background.opacity / 100 
+                  : 1;
+
+                switch (background.type) {
+                  case 'color':
+                    return {
+                      backgroundColor: background.color,
+                      opacity: opacity,
+                    };
+                  case 'gradient':
+                    return {
+                      background: `linear-gradient(${background.gradient.direction.replace('to-', '')}, ${background.gradient.from}, ${background.gradient.to})`,
+                      opacity: opacity,
+                    };
+                  case 'image':
+                    return {
+                      backgroundImage: background.image ? `url(${background.image})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      opacity: opacity,
+                    };
+                  default:
+                    return { backgroundColor: '#ffffff' };
+                }
+              };
+
+              return (
                 <div
-                  className={`w-12 h-12 rounded-xl ${getColorClasses(
-                    loan.color
-                  )} flex items-center justify-center mb-4`}
+                  key={card.id}
+                  className="border-2 border-gray-100 rounded-2xl hover:border-blue-200 hover:shadow-lg transition-all duration-300 text-center relative overflow-hidden"
+                  data-aos="fade-up"
+                  data-aos-duration="800"
+                  data-aos-delay={index * 100}
                 >
-                  <Icon className="w-6 h-6" />
+                  {/* 배경 레이어 */}
+                  <div
+                    className="absolute inset-0 rounded-2xl"
+                    style={getCardBackgroundStyle()}
+                  />
+                  
+                  {/* 콘텐츠 레이어 */}
+                  <div className="relative z-10 p-6">
+                  <div
+                    className={`w-12 h-12 rounded-xl ${getColorClasses(
+                      card.color
+                    )} flex items-center justify-center mb-4 mx-auto`}
+                  >
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 
+                    className="text-xl font-bold mb-2"
+                    style={{ color: textColor.title }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p 
+                    className="mb-4"
+                    style={{ color: textColor.description }}
+                  >
+                    {card.description}
+                  </p>
+                  <ul className="space-y-2">
+                    {card.features.map((feature, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-center justify-center text-sm"
+                        style={{ color: textColor.features }}
+                      >
+                        <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {loan.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{loan.description}</p>
-                <ul className="space-y-2">
-                  {loan.features.map((feature, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-center text-sm text-gray-700"
-                    >
-                      <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+            </div>
+          );
+        })()}
 
         {/* Why Choose Us */}
         <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl p-8 lg:p-12 mb-20">
@@ -248,6 +391,49 @@ const ServiceSection = () => {
           </div>
         </div>
       </div>
+
+      {/* 관리자 모드 버튼 */}
+      {isAdminMode && (
+        <div className="fixed top-20 left-4 z-[100] flex flex-col gap-4">
+          <button
+            onClick={() => setShowServiceBackgroundManager(true)}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-3 rounded-full shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-110"
+            title="서비스 섹션 배경 설정"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setShowLoanCardManager(true)}
+            className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white p-3 rounded-full shadow-lg hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-110"
+            title="대출 카드 설정"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      {/* 서비스 섹션 배경 관리자 */}
+      {isClient && (
+        <BackgroundManager
+          sectionName="service"
+          currentSettings={serviceSettings}
+          onSettingsChange={updateServiceSettings}
+          isVisible={showServiceBackgroundManager}
+          onClose={() => setShowServiceBackgroundManager(false)}
+          customBackgrounds={customBackgrounds.service}
+          onCustomBackgroundAdd={(path) => addCustomBackground("service", path)}
+        />
+      )}
+
+      {/* 대출 카드 관리자 */}
+      {isClient && (
+        <LoanCardManager
+          currentSettings={loanCardSettings}
+          onSettingsChange={updateLoanCardSettings}
+          isVisible={showLoanCardManager}
+          onClose={() => setShowLoanCardManager(false)}
+        />
+      )}
     </section>
   );
 };

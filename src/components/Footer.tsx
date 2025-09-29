@@ -48,7 +48,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="md:col-span-2">
             <div className="text-2xl font-bold mb-4">
-              SH<span className="text-blue-400">파이낸셜</span>
+              SH<span className="text-blue-400">파이낸셜대부</span>
             </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
               전국 300여 금융기관과 협력하여 고객에게 가장 유리한 
@@ -65,7 +65,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center">
                 <MapPin className="w-4 h-4 mr-3 text-blue-400" />
-                <span>서울시 강남구 테헤란로 123</span>
+                <span>대구광역시 북구 대현로9길 58, 550호(산격동)</span>
               </div>
             </div>
           </div>
@@ -119,9 +119,9 @@ const Footer = () => {
         {/* Legal Info */}
         <div className="border-t border-gray-700 mt-8 pt-8">
           <div className="text-center md:text-left space-y-2 text-sm text-gray-400">
-            <p>SH파이낸셜 대부중개업 | 사업자등록번호: 123-45-67890</p>
-            <p>통신판매업신고번호: 2024-서울강남-1234 | 대부중개업등록번호: 제2024-01호</p>
-            <p>대표: 홍길동 | 개인정보보호책임자: 김철수</p>
+            <p>SH파이낸셜대부 | 사업자등록번호: 386-93-01808</p>
+            <p>통신판매업신고번호: 2024-대구북구-0007 | 대부중개업등록번호: 2024-대구북구-0007(대부)</p>
+            <p>대표: 손강익 | 개인정보보호책임자: 손강익</p>
             <div className="flex flex-col md:flex-row md:space-x-6 space-y-2 md:space-y-0 mt-4">
               <a href="#" className="hover:text-blue-400 transition-colors">이용약관</a>
               <a href="#" className="hover:text-blue-400 transition-colors">개인정보처리방침</a>
@@ -154,7 +154,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-          <p>&copy; 2024 SH파이낸셜. All rights reserved.</p>
+          <p>&copy; 2024 SH파이낸셜대부. All rights reserved.</p>
         </div>
       </div>
     </footer>

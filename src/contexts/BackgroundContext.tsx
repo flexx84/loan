@@ -423,107 +423,10 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     setIsClient(true);
 
-    // localStorage에서 설정 로딩
+    // localStorage에서 설정 로딩 (기본값이 이미 현재 설정을 반영하므로 무시)
     const loadSettings = () => {
       try {
-        // 히어로 섹션 설정 로딩
-        const savedHeroSettings = localStorage.getItem(
-          "hero-background-settings"
-        );
-        if (savedHeroSettings) {
-          const parsed = JSON.parse(savedHeroSettings);
-          setHeroSettings(parsed);
-        }
-
-        // 대출 섹션 설정 로딩
-        const savedLoanSettings = localStorage.getItem(
-          "loan-background-settings"
-        );
-        if (savedLoanSettings) {
-          const parsed = JSON.parse(savedLoanSettings);
-          setLoanSettings(parsed);
-        }
-
-        // 서비스 섹션 설정 로딩
-        const savedServiceSettings = localStorage.getItem(
-          "service-background-settings"
-        );
-        if (savedServiceSettings) {
-          const parsed = JSON.parse(savedServiceSettings);
-          setServiceSettings(parsed);
-        }
-
-        // 히어로 이미지 설정 로딩
-        const savedHeroImageSettings = localStorage.getItem(
-          "hero-image-settings"
-        );
-        if (savedHeroImageSettings) {
-          const parsed = JSON.parse(savedHeroImageSettings);
-          setHeroImageSettings(parsed);
-        }
-
-        // 히어로 텍스트 설정 로딩
-        const savedHeroTextSettings =
-          localStorage.getItem("hero-text-settings");
-        if (savedHeroTextSettings) {
-          const parsed = JSON.parse(savedHeroTextSettings);
-          setHeroTextSettings(parsed);
-        }
-
-        // Payment Card 설정 로딩
-        const savedPaymentCardSettings = localStorage.getItem(
-          "payment-card-settings"
-        );
-        if (savedPaymentCardSettings) {
-          const parsed = JSON.parse(savedPaymentCardSettings);
-          setPaymentCardSettings(parsed);
-        }
-
-        // Payment Card 2 설정 로딩
-        const savedPaymentCard2Settings = localStorage.getItem(
-          "payment-card-2-settings"
-        );
-        if (savedPaymentCard2Settings) {
-          const parsed = JSON.parse(savedPaymentCard2Settings);
-          setPaymentCard2Settings(parsed);
-        }
-
-        // User Block 설정 로딩
-        const savedUserBlockSettings = localStorage.getItem(
-          "user-block-settings"
-        );
-        if (savedUserBlockSettings) {
-          const parsed = JSON.parse(savedUserBlockSettings);
-          setUserBlockSettings(parsed);
-        }
-
-        // Loan Card 설정 로딩
-        const savedLoanCardSettings = localStorage.getItem(
-          "loan-card-settings"
-        );
-        if (savedLoanCardSettings) {
-          const parsed = JSON.parse(savedLoanCardSettings);
-          setLoanCardSettings(parsed);
-        }
-
-        // 커스텀 배경 이미지 로딩
-        const savedHeroCustomBgs = localStorage.getItem(
-          "hero-custom-backgrounds"
-        );
-        const savedLoanCustomBgs = localStorage.getItem(
-          "loan-custom-backgrounds"
-        );
-        const savedServiceCustomBgs = localStorage.getItem(
-          "service-custom-backgrounds"
-        );
-
-        setCustomBackgrounds({
-          hero: savedHeroCustomBgs ? JSON.parse(savedHeroCustomBgs) : [],
-          loan: savedLoanCustomBgs ? JSON.parse(savedLoanCustomBgs) : [],
-          service: savedServiceCustomBgs ? JSON.parse(savedServiceCustomBgs) : [],
-        });
-
-        console.log("✅ Background settings loaded from localStorage");
+        console.log("✅ Using default settings as current configuration");
       } catch (error) {
         console.error("❌ Failed to load background settings:", error);
       }

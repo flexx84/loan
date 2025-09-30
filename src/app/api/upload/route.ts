@@ -123,13 +123,12 @@ export async function POST(request: NextRequest) {
 // GET 요청으로 업로드된 이미지 목록 조회
 export async function GET() {
   try {
-    const imagesDir = path.join(process.cwd(), 'public', 'images');
     // 여기서는 간단히 성공 응답만 반환 (실제로는 파일 목록을 읽어서 반환)
     return NextResponse.json({
       success: true,
       message: 'Image list endpoint ready'
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to get image list' },
       { status: 500 }

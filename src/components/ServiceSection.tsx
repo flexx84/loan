@@ -7,7 +7,6 @@ import {
   Briefcase,
   Home,
   CheckCircle,
-  ArrowRight,
   Settings,
 } from "lucide-react";
 import { useBackground } from "@/contexts/BackgroundContext";
@@ -88,12 +87,6 @@ const ServiceSection = () => {
     },
   ];
 
-  const process = [
-    { step: 1, title: "상담신청", desc: "온라인으로 간편 신청" },
-    { step: 2, title: "맞춤 추천", desc: "최적 상품 선별 추천" },
-    { step: 3, title: "서류 준비", desc: "필요 서류 안내" },
-    { step: 4, title: "대출 실행", desc: "승인 후 즉시 입금" },
-  ];
 
   const getColorClasses = (color: string) => {
     const colorMap = {

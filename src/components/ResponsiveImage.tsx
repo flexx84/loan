@@ -36,7 +36,6 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   quality = 85,
   placeholder = 'empty',
   blurDataURL,
-  category = 'general',
   fallbackSrc = '/images/placeholder.svg',
   onLoad: externalOnLoad,
   onError: externalOnError
@@ -164,6 +163,7 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
       <Image
         {...imageProps}
         fill
+        alt={alt || ""}
         style={{ objectFit: 'cover' }}
       />
     );
@@ -174,6 +174,7 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
       {...imageProps}
       width={1920}
       height={1080}
+      alt={alt || ""}
       style={{ 
         width: '100%', 
         height: 'auto',

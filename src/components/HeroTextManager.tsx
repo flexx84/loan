@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { X, Save, RotateCcw, Type, Monitor, Smartphone } from "lucide-react";
+import { X, Save, RotateCcw, Monitor, Smartphone } from "lucide-react";
 import type { HeroTextSettings } from "@/contexts/BackgroundContext";
 
 interface HeroTextManagerProps {

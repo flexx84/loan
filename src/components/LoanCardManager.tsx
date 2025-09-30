@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Eye, EyeOff, Plus, Trash2, Upload, Palette } from "lucide-react";
+import { X, Eye, EyeOff, Plus, Trash2, Palette } from "lucide-react";
 import type { LoanCardSettings } from "@/contexts/BackgroundContext";
 
 interface LoanCardManagerProps {
@@ -34,7 +34,7 @@ const LoanCardManager: React.FC<LoanCardManagerProps> = ({
     );
   };
 
-  const updateCard = (id: string, field: string, value: any) => {
+  const updateCard = (id: string, field: string, value: string) => {
     setSettings(
       settings.map((card) =>
         card.id === id ? { ...card, [field]: value } : card
@@ -42,7 +42,7 @@ const LoanCardManager: React.FC<LoanCardManagerProps> = ({
     );
   };
 
-  const updateCardBackground = (id: string, field: string, value: any) => {
+  const updateCardBackground = (id: string, field: string, value: string | number | boolean) => {
     setSettings(
       settings.map((card) =>
         card.id === id 
@@ -52,7 +52,7 @@ const LoanCardManager: React.FC<LoanCardManagerProps> = ({
     );
   };
 
-  const updateCardGradient = (id: string, field: string, value: any) => {
+  const updateCardGradient = (id: string, field: string, value: string) => {
     setSettings(
       settings.map((card) =>
         card.id === id 

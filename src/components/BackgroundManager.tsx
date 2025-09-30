@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, X, Upload, Plus, Save, RotateCcw } from 'lucide-react';
+import { X, Plus, Save, RotateCcw } from 'lucide-react';
 import Image from 'next/image';
 import ImageUpload from './ImageUpload';
 

@@ -3,11 +3,6 @@
 import React, { useState, useEffect } from "react";
 import {
   TrendingUp,
-  Users,
-  CheckCircle,
-  Clock,
-  Eye,
-  Settings,
 } from "lucide-react";
 import Image from "next/image";
 import BackgroundManager from "./BackgroundManager";
@@ -476,19 +471,6 @@ const LoanStatusSection = () => {
     },
   ];
 
-  // 상태별 색상 및 아이콘
-  const getStatusStyle = (status: string) => {
-    switch (status) {
-      case "승인완료":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "심사중":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "대기중":
-        return "bg-gray-100 text-gray-800 border-gray-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
 
   // localStorage에서 admin 모드 상태 로딩
   useEffect(() => {

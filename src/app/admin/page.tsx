@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Upload, Image as ImageIcon, Download, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Settings, Image as ImageIcon, Download, Trash2, Eye, EyeOff } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import ImageCarousel from '@/components/ImageCarousel';

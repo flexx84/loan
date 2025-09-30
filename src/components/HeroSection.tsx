@@ -18,12 +18,10 @@ const HeroSection = () => {
     heroTextSettings,
     paymentCardSettings,
     paymentCard2Settings,
-    userBlockSettings,
     updateHeroImageSettings,
     updateHeroTextSettings,
     updatePaymentCardSettings,
     updatePaymentCard2Settings,
-    updateUserBlockSettings,
     customBackgrounds,
     addCustomBackground,
     isClient,
@@ -34,7 +32,6 @@ const HeroSection = () => {
   const [showHeroTextManager, setShowHeroTextManager] = useState(false);
   const [showPaymentCardManager, setShowPaymentCardManager] = useState(false);
   const [showPaymentCard2Manager, setShowPaymentCard2Manager] = useState(false);
-  const [showUserBlockManager, setShowUserBlockManager] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   // 현재 디바이스 타입 감지

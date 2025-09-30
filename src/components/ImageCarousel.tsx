@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play, Settings, Plus, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play, Plus, X } from 'lucide-react';
 import ResponsiveImage from './ResponsiveImage';
 import ImageUpload from './ImageUpload';
 
@@ -87,7 +87,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     return () => clearInterval(timer);
   }, [isPlaying, interval, images.length]);
 
-  const goToSlide = (index: number) => {
+  const goToSlide = useCallback((index: number) => {
     if (index === currentIndex || isTransitioning) return;
     
     setIsTransitioning(true);
@@ -96,21 +96,21 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     setTimeout(() => {
       setIsTransitioning(false);
     }, 300);
-  };
+  }, [currentIndex, isTransitioning]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
     goToSlide(newIndex);
-  };
+  }, [currentIndex, images.length, goToSlide]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     const newIndex = (currentIndex + 1) % images.length;
     goToSlide(newIndex);
-  };
+  }, [currentIndex, images.length, goToSlide]);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = useCallback(() => {
     setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying]);
 
   const handleImageUpload = (uploadedFiles: UploadedFile[]) => {
     const newImages = uploadedFiles
@@ -160,7 +160,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, images.length]);
+  }, [currentIndex, images.length, goToNext, goToPrevious, togglePlayPause]);
 
   // 터치/마우스 스와이프 처리
   const [touchStart, setTouchStart] = useState<number | null>(null);

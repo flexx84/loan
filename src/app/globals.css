@@ -92,6 +92,12 @@ body {
   }
 }
 
+@keyframes glowing {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(-100%);
@@ -1089,10 +1095,12 @@ body {
   flex-direction: column;
   width: 170px;
   height: 170px;
-  background: linear-gradient(120deg, #2c42be, #4d68fd);
+  background: linear-gradient(90deg, red, yellow, green, blue, red);
+  background-size: 400%;
   border-radius: 50%;
   text-align: center;
   font-weight: 700;
+  animation: glowing 8s linear infinite;
   color: #fff;
   font-size: 23px;
   line-height: 1.1;

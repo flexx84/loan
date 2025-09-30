@@ -1402,7 +1402,7 @@ ul li p em {
   align-items: center;
   border: 12px solid transparent;
   background-image: linear-gradient(#fff, #fff), 
-  linear-gradient(120deg, #fbc12b 0%, #fe634a 100%);
+  linear-gradient(120deg, #5490ff 0%, #2deffd 100%);
   background-origin: border-box;
   background-clip: content-box, border-box;
   gap: 7px;
@@ -1412,7 +1412,7 @@ ul li p em {
   font-size: 32px;
   letter-spacing: 0.02em;
   font-weight: 800;
-  background-image: linear-gradient(120deg, #fbc12b 0%, #fe634a 100%);
+  background-image: linear-gradient(120deg, #0b5e37 0%, #0ba188 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
